@@ -129,10 +129,5 @@
     },
     "appImage": {
         "license": "LICENSE"
-    },
-    "publish": {
-        "provider": "github",
-        "owner": "bugraskl",
-        "repo": "file-categorizer"
     }
 }
