@@ -1,0 +1,141 @@
+{
+    "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
+    "appId": "com.filecategorizer.app",
+    "productName": "File Categorizer",
+    "copyright": "Copyright © 2024 File Categorizer Team",
+    "directories": {
+        "output": "dist",
+        "buildResources": "assets"
+    },
+    "files": [
+        "src/**/*",
+        "logs/**/*",
+        "!**/*.map",
+        "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
+        "!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}",
+        "!**/node_modules/*.d.ts",
+        "!**/node_modules/.bin"
+    ],
+    "extraResources": [
+        {
+            "from": "src/python",
+            "to": "python",
+            "filter": [
+                "**/*"
+            ]
+        }
+    ],
+    "win": {
+        "target": [
+            {
+                "target": "nsis",
+                "arch": [
+                    "x64",
+                    "ia32"
+                ]
+            },
+            {
+                "target": "portable",
+                "arch": [
+                    "x64"
+                ]
+            }
+        ],
+        "icon": "assets/icon.ico",
+        "artifactName": "${productName}-${version}-${arch}.${ext}"
+    },
+    "nsis": {
+        "oneClick": false,
+        "allowToChangeInstallationDirectory": true,
+        "createDesktopShortcut": true,
+        "createStartMenuShortcut": true,
+        "shortcutName": "File Categorizer",
+        "installerIcon": "assets/icon.ico",
+        "uninstallerIcon": "assets/icon.ico",
+        "installerHeaderIcon": "assets/icon.ico",
+        "license": "LICENSE"
+    },
+    "portable": {
+        "artifactName": "${productName}-${version}-Portable.${ext}"
+    },
+    "mac": {
+        "target": [
+            {
+                "target": "dmg",
+                "arch": [
+                    "x64",
+                    "arm64"
+                ]
+            },
+            {
+                "target": "zip",
+                "arch": [
+                    "x64",
+                    "arm64"
+                ]
+            }
+        ],
+        "icon": "assets/icon.icns",
+        "category": "public.app-category.utilities",
+        "hardenedRuntime": true,
+        "gatekeeperAssess": false,
+        "entitlements": "entitlements.mac.plist",
+        "entitlementsInherit": "entitlements.mac.plist",
+        "artifactName": "${productName}-${version}-${arch}.${ext}"
+    },
+    "dmg": {
+        "contents": [
+            {
+                "x": 130,
+                "y": 220
+            },
+            {
+                "x": 410,
+                "y": 220,
+                "type": "link",
+                "path": "/Applications"
+            }
+        ],
+        "window": {
+            "width": 540,
+            "height": 380
+        }
+    },
+    "linux": {
+        "target": [
+            {
+                "target": "AppImage",
+                "arch": [
+                    "x64"
+                ]
+            },
+            {
+                "target": "deb",
+                "arch": [
+                    "x64"
+                ]
+            },
+            {
+                "target": "rpm",
+                "arch": [
+                    "x64"
+                ]
+            }
+        ],
+        "icon": "assets/icons",
+        "category": "Utility",
+        "maintainer": "File Categorizer Team",
+        "vendor": "File Categorizer",
+        "synopsis": "Desktop File Categorization Application",
+        "description": "Categorize your files intelligently without AI",
+        "artifactName": "${productName}-${version}-${arch}.${ext}"
+    },
+    "appImage": {
+        "license": "LICENSE"
+    },
+    "publish": {
+        "provider": "github",
+        "owner": "your-username",
+        "repo": "file-categorizer"
+    }
+}

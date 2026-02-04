@@ -1,0 +1,83 @@
+{
+    "name": "file-categorizer",
+    "version": "1.0.0",
+    "description": "Masaüstü dosya kategorileştirme uygulaması - AI kullanmadan algoritmik sınıflandırma",
+    "main": "src/main/main.js",
+    "scripts": {
+        "start": "electron .",
+        "build": "electron-builder",
+        "build:win": "electron-builder --win",
+        "build:mac": "electron-builder --mac",
+        "build:linux": "electron-builder --linux"
+    },
+    "keywords": [
+        "file-organizer",
+        "file-categorizer",
+        "desktop-app",
+        "electron"
+    ],
+    "author": "File Categorizer Team",
+    "license": "MIT",
+    "devDependencies": {
+        "electron": "^28.0.0",
+        "electron-builder": "^24.9.1"
+    },
+    "build": {
+        "appId": "com.filecategorizer.app",
+        "productName": "File Categorizer",
+        "directories": {
+            "output": "dist"
+        },
+        "files": [
+            "src/**/*",
+            "logs/**/*"
+        ],
+        "extraResources": [
+            {
+                "from": "src/python",
+                "to": "python",
+                "filter": [
+                    "**/*"
+                ]
+            }
+        ],
+        "win": {
+            "target": [
+                {
+                    "target": "nsis",
+                    "arch": [
+                        "x64"
+                    ]
+                }
+            ],
+            "icon": "assets/icon.ico"
+        },
+        "mac": {
+            "target": [
+                {
+                    "target": "dmg",
+                    "arch": [
+                        "x64",
+                        "arm64"
+                    ]
+                }
+            ],
+            "icon": "assets/icon.icns",
+            "category": "public.app-category.utilities"
+        },
+        "linux": {
+            "target": [
+                "AppImage",
+                "deb"
+            ],
+            "icon": "assets/icon.png",
+            "category": "Utility"
+        },
+        "nsis": {
+            "oneClick": false,
+            "allowToChangeInstallationDirectory": true,
+            "createDesktopShortcut": true,
+            "createStartMenuShortcut": true
+        }
+    }
+}

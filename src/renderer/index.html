@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline';">
+    <title>File Categorizer</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+    <div class="app">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-title">File Categorizer</div>
+            <div class="header-actions">
+                <button id="categorizeBtn" class="btn btn-primary" disabled>Categorize</button>
+                <button id="undoBtn" class="btn" disabled>Undo</button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main">
+            <!-- Left Panel -->
+            <aside class="panel panel-left">
+                <!-- Folder Selection -->
+                <section class="section">
+                    <h3 class="section-title">Folder</h3>
+                    <div class="folder-row">
+                        <input type="text" id="folderPath" class="input" readonly placeholder="No folder selected">
+                        <button id="selectFolderBtn" class="btn">Browse...</button>
+                    </div>
+                    <div id="folderInfo" class="folder-info hidden">
+                        <span id="fileCount">0 files</span> • <span id="totalSize">0 KB</span>
+                    </div>
+                </section>
+
+                <!-- Mode Selection -->
+                <section class="section">
+                    <h3 class="section-title">Categorization Modes</h3>
+                    <div class="checkbox-list">
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="mode" value="extension">
+                            <span>By extension (jpg, pdf, docx...)</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="mode" value="mime">
+                            <span>By MIME type (Image, Video, Document)</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="mode" value="creation_date">
+                            <span>By creation date</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="mode" value="modification_date">
+                            <span>By modification date</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="mode" value="size">
+                            <span>By size (0-1MB, 1-10MB...)</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="mode" value="pattern">
+                            <span>By name pattern (invoice, IMG_...)</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="mode" value="similarity">
+                            <span>Similarity analysis</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="mode" value="dynamic_size">
+                            <span>Dynamic size histogram</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="mode" value="same_name">
+                            <span>Group same-name files</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="mode" value="multi_criteria">
+                            <span>Multi-criteria (AND/OR)</span>
+                        </label>
+                    </div>
+                </section>
+
+                <!-- Options -->
+                <section class="section">
+                    <h3 class="section-title">Options</h3>
+
+                    <div class="option-row">
+                        <label>Folder names:</label>
+                        <select id="folderLanguage" class="select">
+                            <option value="en">English</option>
+                            <option value="tr">Turkish</option>
+                        </select>
+                    </div>
+
+                    <div class="option-row">
+                        <label>Date format:</label>
+                        <select id="dateFormat" class="select">
+                            <option value="YYYY">Year (2024)</option>
+                            <option value="YYYY-MM">Year-Month (2024-01)</option>
+                            <option value="YYYY-MM-DD">Year-Month-Day (2024-01-15)</option>
+                        </select>
+                    </div>
+
+                    <div class="option-row">
+                        <label>Conflict resolution:</label>
+                        <select id="conflictResolution" class="select">
+                            <option value="number">Add number - file (1).jpg</option>
+                            <option value="timestamp">Add timestamp</option>
+                        </select>
+                    </div>
+
+                    <div class="option-row">
+                        <label>Similarity threshold:</label>
+                        <div class="slider-row">
+                            <input type="range" id="similarityThreshold" min="50" max="100" value="80">
+                            <span id="similarityValue">80%</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Multi Criteria Options -->
+                <section class="section" id="multiCriteriaSection" style="display: none;">
+                    <h3 class="section-title">Multi-Criteria Settings</h3>
+                    <div class="option-row">
+                        <label>Criteria 1:</label>
+                        <select id="criteria1" class="select">
+                            <option value="extension">Extension</option>
+                            <option value="mime">MIME Type</option>
+                            <option value="size">Size</option>
+                            <option value="year">Year</option>
+                            <option value="month">Month</option>
+                        </select>
+                    </div>
+                    <div class="option-row">
+                        <label>Operator:</label>
+                        <select id="logicOperator" class="select">
+                            <option value="AND">AND</option>
+                            <option value="OR">OR</option>
+                        </select>
+                    </div>
+                    <div class="option-row">
+                        <label>Criteria 2:</label>
+                        <select id="criteria2" class="select">
+                            <option value="year">Year</option>
+                            <option value="extension">Extension</option>
+                            <option value="mime">MIME Type</option>
+                            <option value="size">Size</option>
+                            <option value="month">Month</option>
+                        </select>
+                    </div>
+                </section>
+
+                <!-- Simulate Button -->
+                <section class="section">
+                    <button id="simulateBtn" class="btn btn-full" disabled>Simulate (Preview)</button>
+                </section>
+            </aside>
+
+            <!-- Right Panel -->
+            <main class="panel panel-right">
+                <div class="tabs">
+                    <button class="tab active" data-tab="result">Result</button>
+                    <button class="tab" data-tab="log">Log</button>
+                </div>
+
+                <div class="tab-content" id="resultTab">
+                    <div id="resultPlaceholder" class="placeholder">
+                        No operation performed yet.<br>
+                        Select a folder and mode from the left panel, then click "Categorize" or "Simulate".
+                    </div>
+                    <div id="resultContent" class="hidden">
+                        <div class="result-stats">
+                            <div class="stat"><strong id="resultTotal">0</strong> files</div>
+                            <div class="stat"><strong id="resultMoved">0</strong> moved</div>
+                            <div class="stat"><strong id="resultFolders">0</strong> folders</div>
+                            <div class="stat"><strong id="resultErrors">0</strong> errors</div>
+                            <div class="stat"><strong id="resultDuration">0</strong> sec</div>
+                        </div>
+                        <h4>Created Folders:</h4>
+                        <div id="folderList" class="folder-list"></div>
+                        <div id="errorSection" class="error-section hidden">
+                            <h4>Errors:</h4>
+                            <ul id="errorList"></ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content hidden" id="logTab">
+                    <div id="logContent" class="log-content">
+                        <div class="log-entry info">[Started] Application ready.</div>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!-- Progress Bar -->
+        <div id="progressBar" class="progress-bar hidden">
+            <div class="progress-inner">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <span id="progressText">Processing...</span>
+            <button id="cancelBtn" class="btn btn-small">Cancel</button>
+        </div>
+
+        <!-- Simulation Modal -->
+        <div id="simulationModal" class="modal hidden">
+            <div class="modal-box">
+                <div class="modal-header">
+                    <h3>Simulation Result</h3>
+                    <button class="modal-close" id="closeSimModal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p class="modal-info">This is a preview. Files have not been moved yet.</p>
+                    <div class="sim-stats">
+                        <span><strong id="simFiles">0</strong> files</span>
+                        <span><strong id="simFolders">0</strong> folders</span>
+                    </div>
+                    <div id="simPreview" class="sim-preview"></div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn" id="cancelSim">Cancel</button>
+                    <button class="btn btn-primary" id="confirmSim">Confirm & Move</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/renderer.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,3 @@
+# Operation Logs Directory
+Bu klasör, kategorileştirme işlemlerinin loglarını saklar.
+Geri alma (undo) işlemi için bu loglar kullanılır.
