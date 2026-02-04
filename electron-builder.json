@@ -77,10 +77,7 @@
         ],
         "icon": "assets/icon.icns",
         "category": "public.app-category.utilities",
-        "hardenedRuntime": true,
-        "gatekeeperAssess": false,
-        "entitlements": "entitlements.mac.plist",
-        "entitlementsInherit": "entitlements.mac.plist",
+        "identity": null,
         "artifactName": "${productName}-${version}-${arch}.${ext}"
     },
     "dmg": {
@@ -135,7 +132,7 @@
     },
     "publish": {
         "provider": "github",
-        "owner": "your-username",
+        "owner": "bugraskl",
         "repo": "file-categorizer"
     }
 }

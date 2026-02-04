@@ -10,6 +10,7 @@ on:
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - os: windows-latest
@@ -41,6 +42,8 @@ jobs:
 
       - name: Build app
         run: ${{ matrix.build_cmd }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
@@ -49,6 +52,8 @@ jobs:
           path: |
             dist/*.exe
             dist/*.dmg
+            dist/*.zip
             dist/*.AppImage
             dist/*.deb
+          if-no-files-found: warn
           retention-days: 30
